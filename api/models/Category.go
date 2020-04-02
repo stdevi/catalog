@@ -11,7 +11,7 @@ type Category struct {
 
 var tableName = "product_category"
 
-func (category *Category) SaveCategory(db *gorm.DB) (*Category, error) {
+func (category *Category) Save(db *gorm.DB) (*Category, error) {
 	if err := db.Table(tableName).Create(&category).Error; err != nil {
 		return nil, err
 	}
@@ -19,7 +19,17 @@ func (category *Category) SaveCategory(db *gorm.DB) (*Category, error) {
 	return category, nil
 }
 
-func FindAllCategories(db *gorm.DB) ([]*Category, error) {
+func (category *Category) Update(db *gorm.DB, id uint) (*Category, error) {
+	if err := db.Table(tableName).Where("id = ?", id).Updates(map[string]interface{}{
+		"name": category.Name,
+	}).Error; err != nil {
+		return nil, err
+	}
+
+	return category, nil
+}
+
+func (category *Category) FindAll(db *gorm.DB) ([]*Category, error) {
 	categories := make([]*Category, 0)
 
 	if err := db.Table(tableName).Find(&categories).Error; err != nil {
