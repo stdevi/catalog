@@ -29,6 +29,14 @@ func (category *Category) Update(db *gorm.DB, id uint) (*Category, error) {
 	return category, nil
 }
 
+func (category *Category) Delete(db *gorm.DB, id uint) error {
+	if err := db.Table(tableName).Delete(&Category{}, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (category *Category) FindAll(db *gorm.DB) ([]*Category, error) {
 	categories := make([]*Category, 0)
 
