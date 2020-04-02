@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"catalog/api/models"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -29,6 +30,8 @@ func (server *Server) InitDB() {
 		log.Printf("Error connecting to %s database", databaseName)
 		log.Fatal(err)
 	}
+
+	server.DB.AutoMigrate(&models.Category{}, &models.Product{})
 }
 
 func (server *Server) CloseDB() {
