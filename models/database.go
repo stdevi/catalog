@@ -11,12 +11,10 @@ import (
 
 var db *gorm.DB
 
-func init() {
-	db = openConn()
-}
+func InitDB() {
+	var err error
 
-func openConn() *gorm.DB {
-	if err := godotenv.Load(); err != nil {
+	if err = godotenv.Load(); err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
@@ -25,14 +23,13 @@ func openConn() *gorm.DB {
 	databaseName := os.Getenv("databaseName")
 	url := fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local", username, password, databaseName)
 
-	db, err := gorm.Open("mysql", url)
-	if err != nil {
+	if db, err = gorm.Open("mysql", url); err != nil {
 		log.Fatal(err)
 	}
-
-	return db
 }
 
-func GetDB() *gorm.DB {
-	return db
+func CloseDB() {
+	if err := db.Close(); err != nil {
+		log.Panic(err)
+	}
 }
