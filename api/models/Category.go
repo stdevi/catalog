@@ -6,13 +6,23 @@ import (
 
 type Category struct {
 	ID   uint   `gorm:"primary_key;auto_increment"`
-	Name string `gorm:"not null"`
+	Name string `gorm:"not null;unique"`
 }
 
-func (category *Category) FindAllCategories(db *gorm.DB) ([]*Category, error) {
+var tableName = "product_category"
+
+func (category *Category) SaveCategory(db *gorm.DB) (*Category, error) {
+	if err := db.Table(tableName).Create(&category).Error; err != nil {
+		return nil, err
+	}
+
+	return category, nil
+}
+
+func FindAllCategories(db *gorm.DB) ([]*Category, error) {
 	categories := make([]*Category, 0)
 
-	if err := db.Table("product_category").Find(&categories).Error; err != nil {
+	if err := db.Table(tableName).Find(&categories).Error; err != nil {
 		return nil, err
 	}
 
