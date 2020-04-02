@@ -1,4 +1,4 @@
-package models
+package controllers
 
 import (
 	"fmt"
@@ -9,9 +9,11 @@ import (
 	"os"
 )
 
-var db *gorm.DB
+type Server struct {
+	DB *gorm.DB
+}
 
-func InitDB() {
+func (server *Server) InitDB() {
 	var err error
 
 	if err = godotenv.Load(); err != nil {
@@ -23,13 +25,14 @@ func InitDB() {
 	databaseName := os.Getenv("databaseName")
 	url := fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local", username, password, databaseName)
 
-	if db, err = gorm.Open("mysql", url); err != nil {
+	if server.DB, err = gorm.Open("mysql", url); err != nil {
+		log.Printf("Error connecting to %s database", databaseName)
 		log.Fatal(err)
 	}
 }
 
-func CloseDB() {
-	if err := db.Close(); err != nil {
+func (server *Server) CloseDB() {
+	if err := server.DB.Close(); err != nil {
 		log.Panic(err)
 	}
 }
