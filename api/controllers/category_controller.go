@@ -28,11 +28,7 @@ func (s *Server) CreateCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(cCreated); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	WriteResponse(w, cCreated)
 }
 
 func (s *Server) UpdateCategory(w http.ResponseWriter, r *http.Request) {
@@ -56,15 +52,11 @@ func (s *Server) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	cUpdated, err := c.Update(s.DB, uint(id))
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
-		return
-	}
-
-	w.Header().Add("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(cUpdated); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	WriteResponse(w, cUpdated)
 }
 
 func (s *Server) DeleteCategory(w http.ResponseWriter, r *http.Request) {
@@ -87,9 +79,5 @@ func (s *Server) GetCategories(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(cs); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	WriteResponse(w, cs)
 }
