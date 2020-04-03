@@ -19,3 +19,12 @@ func (p *Product) FindAll(db *gorm.DB) ([]*Product, error) {
 
 	return ps, nil
 }
+
+func (p *Product) FindAllByCategory(db *gorm.DB, category Category) ([]*Product, error) {
+	ps := make([]*Product, 0)
+	if err := db.Model(&category).Related(&ps).Error; err != nil {
+		return nil, err
+	}
+
+	return ps, nil
+}
