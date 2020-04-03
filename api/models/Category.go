@@ -5,8 +5,8 @@ import (
 )
 
 type Category struct {
-	ID   uint   `gorm:"primary_key;auto_increment"`
-	Name string `gorm:"not null;unique"`
+	ID   uint   `gorm:"primary_key;auto_increment" json:"id"`
+	Name string `gorm:"not null;unique" json:"name"`
 }
 
 func (c *Category) Save(db *gorm.DB) (*Category, error) {
