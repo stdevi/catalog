@@ -36,6 +36,14 @@ func (p *Product) Update(db *gorm.DB, id uint) (*Product, error) {
 	return p, nil
 }
 
+func (p *Product) Delete(db *gorm.DB, id uint) error {
+	if err := db.Delete(&Product{}, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (p *Product) FindAll(db *gorm.DB) ([]*Product, error) {
 	ps := make([]*Product, 0)
 	if err := db.Find(&ps).Error; err != nil {
