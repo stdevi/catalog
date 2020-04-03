@@ -32,6 +32,8 @@ func (server *Server) InitDB() {
 	}
 
 	server.DB.AutoMigrate(&models.Category{}, &models.Product{})
+	server.DB.Model(&models.Product{}).AddForeignKey("category_id", "categories(id)",
+		"RESTRICT", "RESTRICT")
 }
 
 func (server *Server) CloseDB() {
