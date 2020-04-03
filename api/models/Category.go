@@ -37,7 +37,6 @@ func (c *Category) Delete(db *gorm.DB, id uint) error {
 
 func (c *Category) FindAll(db *gorm.DB) ([]*Category, error) {
 	cs := make([]*Category, 0)
-
 	if err := db.Find(&cs).Error; err != nil {
 		return nil, err
 	}
