@@ -67,6 +67,19 @@ func (s *Server) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (s *Server) DeleteCategory(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.ParseUint(mux.Vars(r)["id"], 10, 32)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	if err := (&models.Category{}).Delete(s.DB, uint(id)); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func (s *Server) GetCategories(w http.ResponseWriter, _ *http.Request) {
 	cs, err := (&models.Category{}).FindAll(s.DB)
 	if err != nil {
