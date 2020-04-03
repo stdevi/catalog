@@ -6,7 +6,7 @@ import (
 
 type Category struct {
 	ID   uint   `gorm:"primary_key;auto_increment" json:"id"`
-	Name string `gorm:"not null;unique" json:"name"`
+	Name string `gorm:"not null" json:"name"`
 }
 
 func (c *Category) Save(db *gorm.DB) (*Category, error) {
@@ -37,6 +37,14 @@ func (c *Category) Delete(db *gorm.DB, id uint) error {
 	}
 
 	return nil
+}
+
+func (c *Category) FindById(db *gorm.DB, id uint) (*Category, error) {
+	if err := db.Take(&c, "id = ?", id).Error; err != nil {
+		return nil, err
+	}
+
+	return c, nil
 }
 
 func (c *Category) FindAll(db *gorm.DB) ([]*Category, error) {
