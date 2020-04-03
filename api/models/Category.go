@@ -18,9 +18,13 @@ func (c *Category) Save(db *gorm.DB) (*Category, error) {
 }
 
 func (c *Category) Update(db *gorm.DB, id uint) (*Category, error) {
-	if err := db.Where("id = ?", id).Updates(map[string]interface{}{
+	if err := db.Model(&c).Where("id = ?", id).Updates(map[string]interface{}{
 		"name": c.Name,
 	}).Error; err != nil {
+		return nil, err
+	}
+
+	if err := db.Where("id = ?", id).Take(&c).Error; err != nil {
 		return nil, err
 	}
 

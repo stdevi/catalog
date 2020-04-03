@@ -19,6 +19,23 @@ func (p *Product) Save(db *gorm.DB) (*Product, error) {
 	return p, nil
 }
 
+func (p *Product) Update(db *gorm.DB, id uint) (*Product, error) {
+	if err := db.Model(&p).Where("id = ?", id).Updates(map[string]interface{}{
+		"name":        p.Name,
+		"description": p.Description,
+		"price":       p.Price,
+		"category_id": p.Category.ID,
+	}).Error; err != nil {
+		return nil, err
+	}
+
+	if err := db.Where("id = ?", id).Take(&p).Error; err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
 func (p *Product) FindAll(db *gorm.DB) ([]*Product, error) {
 	ps := make([]*Product, 0)
 	if err := db.Find(&ps).Error; err != nil {
