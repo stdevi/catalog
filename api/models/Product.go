@@ -11,6 +11,14 @@ type Product struct {
 	Category    Category
 }
 
+func (p *Product) Save(db *gorm.DB) (*Product, error) {
+	if err := db.Save(&p).Error; err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
 func (p *Product) FindAll(db *gorm.DB) ([]*Product, error) {
 	ps := make([]*Product, 0)
 	if err := db.Find(&ps).Error; err != nil {
