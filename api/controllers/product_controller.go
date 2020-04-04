@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"catalog/api/models"
+	"catalog/api/utils"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
@@ -12,23 +13,23 @@ import (
 func (s *Server) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatProductError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	p := models.Product{}
 	if err := json.Unmarshal(b, &p); err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatProductError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	pCreated, err := p.Save(s.DB)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.FormatProductError(err), http.StatusInternalServerError)
 		return
 	}
 
-	WriteResponse(w, pCreated)
+	utils.WriteResponse(w, pCreated)
 }
 
 func (s *Server) UpdateProduct(w http.ResponseWriter, r *http.Request) {
@@ -40,23 +41,23 @@ func (s *Server) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatProductError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	p := models.Product{}
 	if err := json.Unmarshal(b, &p); err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatProductError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	pUpdated, err := p.Update(s.DB, uint(id))
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.FormatProductError(err), http.StatusInternalServerError)
 		return
 	}
 
-	WriteResponse(w, pUpdated)
+	utils.WriteResponse(w, pUpdated)
 }
 
 func (s *Server) DeleteProduct(w http.ResponseWriter, r *http.Request) {
@@ -75,11 +76,11 @@ func (s *Server) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetProducts(w http.ResponseWriter, _ *http.Request) {
 	ps, err := (&models.Product{}).FindAll(s.DB)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
 		return
 	}
 
-	WriteResponse(w, ps)
+	utils.WriteResponse(w, ps)
 }
 
 func (s *Server) GetProductsByCategoryId(w http.ResponseWriter, r *http.Request) {
@@ -91,9 +92,9 @@ func (s *Server) GetProductsByCategoryId(w http.ResponseWriter, r *http.Request)
 
 	ps, err := (&models.Product{}).FindAllByCategoryId(s.DB, uint(cid))
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
 		return
 	}
 
-	WriteResponse(w, ps)
+	utils.WriteResponse(w, ps)
 }
