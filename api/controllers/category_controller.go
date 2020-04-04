@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"catalog/api/models"
+	"catalog/api/utils"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
@@ -12,23 +13,23 @@ import (
 func (s *Server) CreateCategory(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	c := models.Category{}
 	if err := json.Unmarshal(b, &c); err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	cCreated, err := c.Save(s.DB)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
 		return
 	}
 
-	WriteResponse(w, cCreated)
+	utils.WriteResponse(w, cCreated)
 }
 
 func (s *Server) UpdateCategory(w http.ResponseWriter, r *http.Request) {
@@ -40,23 +41,23 @@ func (s *Server) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	c := models.Category{}
 	if err := json.Unmarshal(b, &c); err != nil {
-		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
 		return
 	}
 
 	cUpdated, err := c.Update(s.DB, uint(id))
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
 		return
 	}
 
-	WriteResponse(w, cUpdated)
+	utils.WriteResponse(w, cUpdated)
 }
 
 func (s *Server) DeleteCategory(w http.ResponseWriter, r *http.Request) {
@@ -75,9 +76,9 @@ func (s *Server) DeleteCategory(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetCategories(w http.ResponseWriter, _ *http.Request) {
 	cs, err := (&models.Category{}).FindAll(s.DB)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
 		return
 	}
 
-	WriteResponse(w, cs)
+	utils.WriteResponse(w, cs)
 }
