@@ -117,3 +117,22 @@ func seedSingleCategory() (*models.Category, error) {
 
 	return c, nil
 }
+
+func seedSingleCategoryAndProduct() (*models.Product, error) {
+	c := &models.Category{Name: "Electronics"}
+	if err := server.DB.Model(&models.Category{}).Create(c).Error; err != nil {
+		return nil, err
+	}
+
+	p := &models.Product{
+		Name:        "Product",
+		Description: "Product info",
+		Price:       42,
+		CategoryID:  c.ID,
+	}
+	if err := server.DB.Model(&models.Product{}).Create(p).Error; err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}

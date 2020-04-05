@@ -15,7 +15,7 @@ type Product struct {
 	Category    Category `json:"category"`
 }
 
-func (p *Product) validate() error {
+func (p *Product) Validate() error {
 	if strings.TrimSpace(p.Name) == "" {
 		return utils.ErrInvalidProductName
 	}
@@ -27,7 +27,7 @@ func (p *Product) validate() error {
 }
 
 func (p *Product) Save(db *gorm.DB) (*Product, error) {
-	if err := p.validate(); err != nil {
+	if err := p.Validate(); err != nil {
 		return nil, err
 	}
 
@@ -43,7 +43,7 @@ func (p *Product) Save(db *gorm.DB) (*Product, error) {
 }
 
 func (p *Product) Update(db *gorm.DB, id uint) (*Product, error) {
-	if err := p.validate(); err != nil {
+	if err := p.Validate(); err != nil {
 		return nil, err
 	}
 
