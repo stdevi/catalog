@@ -13,19 +13,24 @@ import (
 func (s *Server) CreateCategory(w http.ResponseWriter, r *http.Request) {
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
+		utils.FormatCategoryError(w, err)
 		return
 	}
 
 	c := models.Category{}
 	if err := json.Unmarshal(b, &c); err != nil {
-		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
+		utils.FormatCategoryError(w, err)
+		return
+	}
+
+	if err := c.Validate(); err != nil {
+		utils.FormatCategoryError(w, err)
 		return
 	}
 
 	cCreated, err := c.Save(s.DB)
 	if err != nil {
-		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
+		utils.FormatCategoryError(w, err)
 		return
 	}
 
@@ -41,19 +46,24 @@ func (s *Server) UpdateCategory(w http.ResponseWriter, r *http.Request) {
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
+		utils.FormatCategoryError(w, err)
 		return
 	}
 
 	c := models.Category{}
 	if err := json.Unmarshal(b, &c); err != nil {
-		http.Error(w, utils.FormatCategoryError(err), http.StatusUnprocessableEntity)
+		utils.FormatCategoryError(w, err)
+		return
+	}
+
+	if err := c.Validate(); err != nil {
+		utils.FormatCategoryError(w, err)
 		return
 	}
 
 	cUpdated, err := c.Update(s.DB, uint(id))
 	if err != nil {
-		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
+		utils.FormatCategoryError(w, err)
 		return
 	}
 
@@ -68,7 +78,7 @@ func (s *Server) DeleteCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := (&models.Category{}).Delete(s.DB, uint(id)); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		utils.FormatCategoryError(w, err)
 		return
 	}
 }
@@ -76,7 +86,7 @@ func (s *Server) DeleteCategory(w http.ResponseWriter, r *http.Request) {
 func (s *Server) GetCategories(w http.ResponseWriter, _ *http.Request) {
 	cs, err := (&models.Category{}).FindAll(s.DB)
 	if err != nil {
-		http.Error(w, utils.FormatCategoryError(err), http.StatusInternalServerError)
+		utils.FormatCategoryError(w, err)
 		return
 	}
 
