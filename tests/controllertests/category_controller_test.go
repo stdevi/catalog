@@ -54,12 +54,12 @@ func TestCreateCategory(t *testing.T) {
 		{
 			body: `{"name": "test category"}`,
 			name: "test category",
-			code: 200,
+			code: http.StatusOK,
 		},
 		{
 			body: `{"name": ""}`,
 			name: "",
-			code: 500,
+			code: http.StatusUnprocessableEntity,
 		},
 	}
 
@@ -74,14 +74,14 @@ func TestCreateCategory(t *testing.T) {
 		handler.ServeHTTP(rr, req)
 
 		assert.Equal(t, rr.Code, input.code)
-		if input.code == 200 {
+		if input.code == http.StatusOK {
 			var c models.Category
 			if err := json.Unmarshal([]byte(rr.Body.String()), &c); err != nil {
 				log.Fatal(err)
 			}
 			assert.Equal(t, input.name, c.Name)
 		}
-		if input.code == 500 {
+		if input.code == http.StatusUnprocessableEntity {
 			assert.Error(t, utils.ErrInvalidCategoryName)
 		}
 	}
@@ -107,25 +107,25 @@ func TestUpdateCategory(t *testing.T) {
 			body: `{"name": "test category"}`,
 			name: "test category",
 			id:   fmt.Sprint(seedC.ID),
-			code: 200,
+			code: http.StatusOK,
 		},
 		{
 			body: `{"name": "test category"}`,
 			name: "test category",
 			id:   "42",
-			code: 500,
+			code: http.StatusNotFound,
 		},
 		{
 			body: `{"name": ""}`,
 			name: "",
 			id:   fmt.Sprint(seedC.ID),
-			code: 500,
+			code: http.StatusUnprocessableEntity,
 		},
 		{
 			body: `{"name": "test category"}`,
 			name: "test category",
 			id:   "my_id",
-			code: 400,
+			code: http.StatusBadRequest,
 		},
 	}
 
@@ -142,7 +142,7 @@ func TestUpdateCategory(t *testing.T) {
 		handler.ServeHTTP(rr, req)
 
 		assert.Equal(t, input.code, rr.Code)
-		if input.code == 200 {
+		if input.code == http.StatusOK {
 			var c models.Category
 			if err := json.Unmarshal([]byte(rr.Body.String()), &c); err != nil {
 				log.Fatal(err)
@@ -176,15 +176,15 @@ func TestDeleteCategory(t *testing.T) {
 	}{
 		{
 			id:   fmt.Sprint(seedC.ID),
-			code: 200,
+			code: http.StatusOK,
 		},
 		{
 			id:   "42",
-			code: 500,
+			code: http.StatusNotFound,
 		},
 		{
 			id:   "my_id",
-			code: 400,
+			code: http.StatusBadRequest,
 		},
 	}
 
@@ -201,7 +201,7 @@ func TestDeleteCategory(t *testing.T) {
 		handler.ServeHTTP(rr, req)
 
 		assert.Equal(t, input.code, rr.Code)
-		if input.code == 500 {
+		if input.id == "42" {
 			assert.Error(t, utils.ErrCategoryNotFound)
 		}
 	}
