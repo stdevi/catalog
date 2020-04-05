@@ -11,7 +11,7 @@ type Category struct {
 	Name string `gorm:"not null" json:"name"`
 }
 
-func (c *Category) validate() error {
+func (c *Category) Validate() error {
 	if strings.TrimSpace(c.Name) == "" {
 		return utils.ErrInvalidCategoryName
 	}
@@ -20,7 +20,7 @@ func (c *Category) validate() error {
 }
 
 func (c *Category) Save(db *gorm.DB) (*Category, error) {
-	if err := c.validate(); err != nil {
+	if err := c.Validate(); err != nil {
 		return nil, err
 	}
 
@@ -32,7 +32,7 @@ func (c *Category) Save(db *gorm.DB) (*Category, error) {
 }
 
 func (c *Category) Update(db *gorm.DB, id uint) (*Category, error) {
-	if err := c.validate(); err != nil {
+	if err := c.Validate(); err != nil {
 		return nil, err
 	}
 
