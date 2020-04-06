@@ -68,17 +68,17 @@ Now you can access API locally at http://localhost:8080.
 ### Category API Resources
 Resource | Description
 ------------ | -------------
-[```GET /api/categories```](#GET-/api/categories) | Getting the list of all categories
-[```POST /api/categories```](#POST-/api/categories) | Create category
-[```PUT /api/categories/[id]```](#PUT-/api/categories/[id]) | Update category by id
+[```GET /api/categories```](#GET-apicategories) | Getting the list of all categories
+[```POST /api/categories```](#POST-apicategories) | Create category
+[```PUT /api/categories/[id]```](#PUT-apicategoriesid) | Update category by id
 ```DELETE /api/categories/[id]``` | Delete category by id
 ### Product API Resources
 Resource | Description
 ------------ | -------------
-[```GET /api/products```](#GET-/api/products) | Getting the list of all products
-[```GET /api/products/category/[id]```](#GET-/api/products/category/[id]) | Getting the list of products of the concrete category
-[```POST /api/products```](#POST-/api/products) | Create product
-[```PUT /api/products/[id]```](#PUT-/api/products/[id]) | Update product by id
+[```GET /api/products```](#GET-apiproducts) | Getting the list of all products
+[```GET /api/products/category/[id]```](#GET-apiproductscategoryid) | Getting the list of products of the concrete category
+[```POST /api/products```](#POST-apiproducts) | Create product
+[```PUT /api/products/[id]```](#PUT-apiproductsid) | Update product by id
 ```DELETE /api/products/[id]``` | Delete product by id
 
 #### GET /api/categories
