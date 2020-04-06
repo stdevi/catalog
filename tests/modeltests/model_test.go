@@ -37,6 +37,10 @@ func SetupDatabase() {
 		log.Printf("Error connecting to %s database", testDatabaseName)
 		log.Fatal(err)
 	}
+
+	if err := server.DB.DropTableIfExists(&models.Category{}, &models.Product{}).Error; err != nil {
+		log.Fatal(err)
+	}
 }
 
 func refreshCategoryTable() error {
