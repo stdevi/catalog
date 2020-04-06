@@ -48,6 +48,8 @@ Get project repository:
 ```bush
 $ git clone https://github.com/stdevi/catalog.git
 ```
+Specify database connection details in the ```.env``` file.
+Create databases called as ```databaseName``` and ```test_databaseName``` parameters int the ```.env``` file.
 
 ## How to run tests
 ```bush
