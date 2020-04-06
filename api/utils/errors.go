@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"net/http"
 	"strings"
 )
 
@@ -18,21 +19,36 @@ var (
 	ErrProductDeletionFailed = errors.New("product deletion failed")
 )
 
-func FormatCategoryError(error error) string {
+func FormatCategoryError(w http.ResponseWriter, error error) {
 	if strings.Contains(error.Error(), "name") {
-		return ErrInvalidCategoryName.Error()
+		http.Error(w, ErrInvalidCategoryName.Error(), http.StatusUnprocessableEntity)
+		return
+	}
+	if strings.Contains(error.Error(), "not found") {
+		http.Error(w, ErrCategoryNotFound.Error(), http.StatusNotFound)
+		return
 	}
 
-	return error.Error()
+	http.Error(w, error.Error(), http.StatusInternalServerError)
 }
 
-func FormatProductError(error error) string {
+func FormatProductError(w http.ResponseWriter, error error) {
 	if strings.Contains(error.Error(), "name") {
-		return ErrInvalidProductName.Error()
+		http.Error(w, ErrInvalidProductName.Error(), http.StatusUnprocessableEntity)
+		return
 	}
 	if strings.Contains(error.Error(), "price") {
-		return ErrInvalidProductPrice.Error()
+		http.Error(w, ErrInvalidProductPrice.Error(), http.StatusUnprocessableEntity)
+		return
+	}
+	if strings.Contains(error.Error(), "category not found") {
+		http.Error(w, ErrCategoryNotFound.Error(), http.StatusNotFound)
+		return
+	}
+	if strings.Contains(error.Error(), "product not found") {
+		http.Error(w, ErrProductNotFound.Error(), http.StatusNotFound)
+		return
 	}
 
-	return error.Error()
+	http.Error(w, error.Error(), http.StatusInternalServerError)
 }

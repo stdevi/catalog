@@ -15,7 +15,7 @@ type Product struct {
 	Category    Category `json:"category"`
 }
 
-func (p *Product) validate() error {
+func (p *Product) Validate() error {
 	if strings.TrimSpace(p.Name) == "" {
 		return utils.ErrInvalidProductName
 	}
@@ -27,7 +27,11 @@ func (p *Product) validate() error {
 }
 
 func (p *Product) Save(db *gorm.DB) (*Product, error) {
-	if err := p.validate(); err != nil {
+	if err := p.Validate(); err != nil {
+		return nil, err
+	}
+
+	if _, err := (&Category{}).FindById(db, p.CategoryID); err != nil {
 		return nil, err
 	}
 
@@ -43,15 +47,13 @@ func (p *Product) Save(db *gorm.DB) (*Product, error) {
 }
 
 func (p *Product) Update(db *gorm.DB, id uint) (*Product, error) {
-	if err := p.validate(); err != nil {
+	if err := p.Validate(); err != nil {
 		return nil, err
 	}
 
-	c, err := (&Category{}).FindById(db, p.CategoryID)
-	if err != nil {
+	if _, err := (&Category{}).FindById(db, p.CategoryID); err != nil {
 		return nil, err
 	}
-	p.Category = *c
 
 	if err := db.Model(&p).Where("id = ?", id).Updates(map[string]interface{}{
 		"name":        p.Name,
@@ -69,10 +71,21 @@ func (p *Product) Update(db *gorm.DB, id uint) (*Product, error) {
 		return nil, err
 	}
 
+	if err := db.Take(&p.Category, "id = ?", p.CategoryID).Error; err != nil {
+		return nil, err
+	}
+
 	return p, nil
 }
 
 func (p *Product) Delete(db *gorm.DB, id uint) error {
+	if err := db.Take(&p, "id = ?", id).Error; err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return utils.ErrProductNotFound
+		}
+		return err
+	}
+
 	if d := db.Delete(&Product{}, "id = ?", id); d.RowsAffected == 0 {
 		return utils.ErrProductDeletionFailed
 	}
