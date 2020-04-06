@@ -46,18 +46,18 @@ The following actions are implemented:
 ## Installation
 Get project repository:
 ```bush
-$ go get github.com/stdevi/catalog
+$ git clone https://github.com/stdevi/catalog.git
 ```
 
 ## How to run tests
 ```bush
-cd go/src/github.com/stdevi/catalog
+cd catalog
 $ go test ./...
 ```
 
 ## How to build and deploy
 ```bush
-cd go/src/github.com/stdevi/catalog
+cd catalog
 $ go build
 $ ./catalog
 ```
