@@ -44,7 +44,7 @@ func TestFindCategoryById(t *testing.T) {
 	assert.Equal(t, c.Name, seedC.Name)
 }
 
-func TestCategoryValidation(t *testing.T) {
+func TestCategoryNameValidation(t *testing.T) {
 	c := models.Category{
 		Name: "",
 	}

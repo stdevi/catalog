@@ -1,4 +1,4 @@
-package modeltests
+package controllertests
 
 import (
 	"catalog/api/controllers"
@@ -12,9 +12,7 @@ import (
 )
 
 var (
-	server   = controllers.Server{}
-	category = models.Category{}
-	product  = models.Product{}
+	server = controllers.Server{}
 )
 
 func TestMain(m *testing.M) {

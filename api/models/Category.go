@@ -53,6 +53,10 @@ func (c *Category) Update(db *gorm.DB, id uint) (*Category, error) {
 }
 
 func (c *Category) Delete(db *gorm.DB, id uint) error {
+	if _, err := (&Category{}).FindById(db, id); err != nil {
+		return utils.ErrCategoryNotFound
+	}
+
 	if d := db.Delete(&Category{}, "id = ?", id); d.RowsAffected == 0 {
 		return utils.ErrCategoryDeletionFailed
 	}
